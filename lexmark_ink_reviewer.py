@@ -22,15 +22,22 @@ driver = webdriver.Chrome(service=service)
 # Access printers_inventory excel and extracts the third column ips
 def Extract_Ips():
     data = pd.read_excel("./printers_Inventory.xlsx", "Hoja1")
-    ip_addresses = data.iloc[:,2].tolist()
+    ip_addresses = []
+
+    for index, row in data.iterrows():
+        ip_dict = {
+            "ip": str(row.iloc[2]),
+            "area": str(row.iloc[3])
+        }
+        ip_addresses.append(ip_dict)
     return ip_addresses
 
 
 def Extract_Printers_Data():
     ip_list = Extract_Ips()
     printers_data = []
-    for ip in ip_list:
-        url = f"http://{ip}/"
+    for printer in ip_list:
+        url = f"http://{printer["ip"]}/"
 
         #Using try and catch to detect the type of UI by error
         # Wait to the page to respond, if not continues with the rest of IP
@@ -43,28 +50,31 @@ def Extract_Printers_Data():
             # Extract the data from the web page and appends
             data = Onlyblack_UI_printer(driver)
             printers_data.append({
-                "ip" : ip,
-                **data
+                "ip" : printer["ip"],
+                **data,
+                "area": printer["area"]
             })
-            print(f"Only black UI detected, with IP: {ip}")
+            print(f"Only black UI detected, with IP: {printer["ip"]}, area: {printer["area"]}")
         except Exception as e:
             try:
                 data = Allinks_UI_printer(driver)
                 printers_data.append({
-                    "ip" : ip,
-                    **data
+                    "ip" : printer["ip"],
+                    **data,
+                    "area": printer["area"]
                 })
 
-                print(f"All inks UI detected, with IP: {ip}")
+                print(f"All inks UI detected, with IP: {printer["ip"]}, area: {printer["area"]}")
 
             except Exception as e:
                 try:
                     data = Old_UI_printer(url)
                     printers_data.append({
-                        "ip" : ip,
-                        **data
+                        "ip" : printer["ip"],
+                        **data,
+                        "area": printer["area"]
                     })
-                    print(f"Old UI detected, with IP: {ip}")
+                    print(f"Old UI detected, with IP: {printer["ip"]}, area: {printer["area"]}")
                 except TimeoutError as e:
                     print(f"Failed to connect to: {url}: {e}")
                     continue
@@ -250,7 +260,6 @@ def main():
     date_str = datetime.now().strftime("%d-%m-%Y")
     filename = fr"C:\Users\setchyberre\Documents\Informes_Tintas\printer_report {date_str}.pdf"
     generate_printer_report(filename,low_level_printers,printers_data,image_path)
-    #print(low_level_printers)
-
+    
 if __name__ == "__main__":
     main()

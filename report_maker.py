@@ -101,8 +101,8 @@ def generate_printer_report(filename, filtered_data, all_data, image_path):
     # Title Section
     title = Paragraph("<b>REPORTE DE IMPRESORAS</b>", styles['Title'])
     story.append(title)
-    date_str = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-    date_para = Paragraph(f"<font size=10>{date_str}</font>", styles['Normal'])
+    date_str = datetime.now().strftime("%d/%m/%Y")
+    date_para = Paragraph(f"<font size=10>Fecha: {date_str}</font>", styles['Normal'])
     story.append(date_para)
     story.append(Spacer(1, 0.1 * inch))
     story.append(Table([[""]], colWidths=[img_width], 
@@ -116,12 +116,12 @@ def generate_printer_report(filename, filtered_data, all_data, image_path):
     # Table Configuration
     headers = [
         "IP", "Tinta\nNegra", "Cian", "Amarillo", "Magenta",
-        "Kit\nde\nMantenimiento", "Unidad\nde Imagen", "Estado"
+        "Kit\nde\nMantenimiento", "Unidad\nde Imagen", "Estado", "Area"
     ]
     
     col_widths = [
         0.97*inch, 0.6*inch, 0.5*inch, 0.7*inch,
-        0.7*inch, 0.9*inch, 0.9*inch, 0.6*inch
+        0.7*inch, 0.9*inch, 0.9*inch, 0.6*inch, 0.97*inch
     ]
     # Adds percent sign and None items adds N/A value
     def process_data(data):
@@ -135,7 +135,8 @@ def generate_printer_report(filename, filtered_data, all_data, image_path):
                 f"{item['magenta_ink']}%" if item['magenta_ink'] else 'N/A',
                 f"{item['maintenance_kit']}%",
                 f"{item['imaging_unit']}%",
-                'N/A' if item['status'] == None else item['status']
+                'N/A' if item['status'] == None else item['status'],
+                item['area']
             ]
             table_data.append(row)
         return table_data
