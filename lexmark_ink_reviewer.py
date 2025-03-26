@@ -36,6 +36,7 @@ def Extract_Ips():
 def Extract_Printers_Data():
     ip_list = Extract_Ips()
     printers_data = []
+    down_printers = []
     for printer in ip_list:
         url = f"http://{printer["ip"]}/"
 
@@ -45,6 +46,17 @@ def Extract_Printers_Data():
             driver.get(url)
         except WebDriverException as e:
             print(f"Failed to connect to: {url}: {e}")
+            down_printers.append({
+                "ip" : printer["ip"],
+                "black_ink": None,
+                "cyan_ink": None,
+                "yellow_ink": None,
+                "magenta_ink": None,
+                "maintenance_kit": None,
+                "imaging_unit": None,
+                "status": None,
+                "area": printer["area"]
+            })
             continue
         try:
             # Extract the data from the web page and appends
@@ -78,6 +90,7 @@ def Extract_Printers_Data():
                 except TimeoutError as e:
                     print(f"Failed to connect to: {url}: {e}")
                     continue
+    printers_data.extend(down_printers)
     return printers_data
 
 def Detect_Low_levels(printers_data):
@@ -91,7 +104,9 @@ def Detect_Low_levels(printers_data):
             if key == "status" and printer[key] == "Nearly Full" or key == "status" and printer[key] == "Full":
                 has_low_level = True
                 break
-            
+            if key == "black_ink" and printer[key] == None:
+                has_low_level = True
+                break
             valuestr = printer[key]
             if valuestr == None:
                 continue
@@ -260,6 +275,6 @@ def main():
     date_str = datetime.now().strftime("%d-%m-%Y")
     filename = fr"C:\Users\setchyberre\Documents\Informes_Tintas\printer_report {date_str}.pdf"
     generate_printer_report(filename,low_level_printers,printers_data,image_path)
-    
+
 if __name__ == "__main__":
     main()

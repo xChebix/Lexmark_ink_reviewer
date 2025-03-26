@@ -133,8 +133,8 @@ def generate_printer_report(filename, filtered_data, all_data, image_path):
                 f"{item['cyan_ink']}%" if item['cyan_ink'] else 'N/A',
                 f"{item['yellow_ink']}%" if item['yellow_ink'] else 'N/A',
                 f"{item['magenta_ink']}%" if item['magenta_ink'] else 'N/A',
-                f"{item['maintenance_kit']}%",
-                f"{item['imaging_unit']}%",
+                f"{item['maintenance_kit']}%" if item['maintenance_kit'] else 'N/A',
+                f"{item['imaging_unit']}%" if item['imaging_unit'] else 'N/A',
                 'N/A' if item['status'] == None else item['status'],
                 item['area']
             ]
