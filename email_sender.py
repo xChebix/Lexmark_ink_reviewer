@@ -10,9 +10,9 @@ def Send_Mail(path):
         yag = yagmail.SMTP(
             user= os.getenv('EMAIL_USER'),          # Your email address
             password= os.getenv('EMAIL_PASSWORD'),  # For Gmail, use App Password if 2FA enabled
-            host= os.getenv('HOST_MAIL'),       # SMTP server (change for other providers)
-            port=465,                     # SSL port
-            smtp_ssl=True                 # Use SSL
+            host= os.getenv('HOST_MAIL'),           # SMTP server (change for other providers)
+            port=465,                               # SSL port
+            smtp_ssl=True                           # Use SSL
         )
 
         # Email details

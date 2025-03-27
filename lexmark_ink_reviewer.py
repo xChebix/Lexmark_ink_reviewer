@@ -18,9 +18,6 @@ from email_sender import Send_Mail
 service = Service(ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service)
 
-# Array values 0= printer IP, 1=black ink, 2= cyan, 3= yellow, 4 = magenta, 5 = maintenance kit,
-# 6 = imaging unit, 7 = status,
-
 # Access printers_inventory excel and extracts the third column ips
 def Extract_Ips():
     data = pd.read_excel("./printers_Inventory.xlsx", "Hoja1")
@@ -34,6 +31,8 @@ def Extract_Ips():
         ip_addresses.append(ip_dict)
     return ip_addresses
 
+# return a dictionary with the values of every printer by detecting different UI interfaces
+# the second dictionary is filled with the data of the printers without connection
 
 def Extract_Printers_Data():
     ip_list = Extract_Ips()
@@ -95,6 +94,7 @@ def Extract_Printers_Data():
     printers_data.extend(down_printers)
     return printers_data
 
+# Returns the printers with low values which indicate the printers that need maintenance
 def Detect_Low_levels(printers_data):
     low_level = []
     keys_to_check = ["black_ink", "cyan_ink", "yellow_ink", "magenta_ink", "maintenance_kit", "imaging_unit", "status"]
@@ -125,6 +125,7 @@ def Detect_Low_levels(printers_data):
 
     return low_level
 
+# Extract data from web UI of lexmark printers with colors
 def Allinks_UI_printer(driver): 
     wait = WebDriverWait(driver, 3)  # Wait 3 segs to load the page
 
@@ -181,6 +182,8 @@ def Allinks_UI_printer(driver):
         "imaging_unit": imaging_level.strip(),
         "status": status_level.strip()
     }
+
+# Extract data from web UI of lexmark printers with only black cartridges
 def Onlyblack_UI_printer(driver):
     wait = WebDriverWait(driver, 3)
     div_element = wait.until(EC.presence_of_element_located((By.CLASS_NAME, "supplyStatusContainer")))
@@ -221,8 +224,6 @@ def Onlyblack_UI_printer(driver):
     print(f"maintnance level: {maintnance_level.strip()}%")
     print(f"waste level: {status_level.strip()}")
 
-    # Array values 0= printer IP, 1=black ink, 2= cyan, 3= yellow, 4 = magenta, 5 = maintenance kit,
-    # 6 = imaging unit, 7 = status
     return {
         "black_ink": ink_level.strip(),
         "cyan_ink": None,
@@ -232,6 +233,7 @@ def Onlyblack_UI_printer(driver):
         "imaging_unit": imaging_level.strip(),
         "status": status_level.strip()
     }
+
 #Return values blackink, maintenance and imaging unit levels from old UI
 def Old_UI_printer(url):
     # Retrieve HTML
