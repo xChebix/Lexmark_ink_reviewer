@@ -12,7 +12,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import WebDriverException, TimeoutException
 
-from report_maker import generate_printer_report 
+from report_maker import generate_printer_report
+from email_sender import Send_Mail
+
 service = Service(ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service)
 
@@ -269,12 +271,17 @@ def Old_UI_printer(url):
 
 
 def main():
+    
     image_path = "./encabezado.png"
     printers_data = Extract_Printers_Data()
     low_level_printers = Detect_Low_levels(printers_data)
     date_str = datetime.now().strftime("%d-%m-%Y")
+    # Insert the path you want to generate the pdf
     filename = fr"C:\Users\setchyberre\Documents\Informes_Tintas\printer_report {date_str}.pdf"
     generate_printer_report(filename,low_level_printers,printers_data,image_path)
+
+    Send_Mail(filename)
+    print("success in running all the code")
 
 if __name__ == "__main__":
     main()
