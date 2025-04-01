@@ -1,9 +1,3 @@
-## Creation: 2025-03-31 15:49
-***
-## Tags: 
-***
-## Resources:
-***
 # General Information
 lexmark_ink_reviewer.py is a script that iterates through lexmark printers web interfaces and scrap his data for reporting purposes, this script was tested with the following printers:
 - MX431adn
