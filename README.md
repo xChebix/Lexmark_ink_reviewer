@@ -30,7 +30,7 @@ EMAIL_USER=examplemail@gmail.com
 EMAIL_PASSWORD=emailpassword
 HOST_MAIL=mail.organization.com
 RECIPIENT=receiver@mail.com
-EMAIL_CC_LIST='["mail1@example.com","jjauregui@agropartners.com.bo"]'`
+EMAIL_CC_LIST='["mail1@example.com","mail2@example.com"]'`
 ```
 
 *Note*: This is the format for the .env file which needs to be located on project folder that was cloned.
