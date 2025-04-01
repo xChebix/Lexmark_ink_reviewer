@@ -1,3 +1,9 @@
+## Creation: 2025-03-31 15:49
+***
+## Tags: 
+***
+## Resources:
+***
 # General Information
 lexmark_ink_reviewer.py is a script that iterates through lexmark printers web interfaces and scrap his data for reporting purposes, this script was tested with the following printers:
 - MX431adn
@@ -35,6 +41,14 @@ EMAIL_CC_LIST='["mail1@example.com","jjauregui@agropartners.com.bo"]'`
 
 *Note*: This is the format for the .env file which needs to be located on project folder that was cloned.
 
+- *printers_Inventory.xlsx*: Under the same project folder you will need to add a excel of printers inventory which will have the following structure:
+```
+|Model|Serial Number|IP Adress|Area|
+------------------------------------
+|ade  | cn504f      |1.1.1.1  |IT  |
+------------------------------------
+```
+*Note*: IP Address must be on the *third* column and Area must be on the *fourth* column, the others column does not matter
 # Documentation
 ### Extract_Ips()
 This functions uses pandas for extracting data from excel, it extracts an ip list from the third column and extract the area which belongs on the fourth column, then adds it into a dictionary and returns it as a list of dictionaries.
